@@ -1,0 +1,219 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #F4F8F3 0%, #DCE9D5 100%); /* Elegant cream-to-mint sage gradient */
+  cursor: none;
+  font-family: system-ui, -apple-system, sans-serif;
+  user-select: none;
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+}
+
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-30%, -10%);
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40"><path fill="%23FFFFFF" d="M11 0h2v2h-2zm-2 2h2v2H9zm4 0h2v2h-2zM7 4h2v2H7zm8 0h2v2h-2zM5 6h2v2H5zm10 0h2v2h-2zM5 8H3v2h2zm12 0h2v2h-2zM3 10H1v6h2v-2h2v-2h2v2h2v2h2v2h4v-2h2v-2h2v-2h2v-6h-2v2h-2v-2h-2v-2h-2v2h-2v-2H5v2H3v-2z"/><path fill="%23000000" d="M11 2h2v2h-2zM9 4h2v2H9zm4 0h2v2h-2zM7 6h2v2H7zm8 0h2v2h-2zM5 8h2v2H5zm10 0h2v2h-2zM3 10h2v4H3zm12 0h2v2h-2v2h-2v-2H9v-2H7v4h2v2h2v2h2v-2h2v-2h2v-4z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5));
+}
+
+#loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #385E38; /* Sage-moss dark green for perfect readability */
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* Beautiful Glassmorphic Control Panel for Texture Tuning */
+.control-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  padding: 20px;
+  width: 280px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  color: #2c3e2f;
+  z-index: 10000;
+  font-family: system-ui, -apple-system, sans-serif;
+  cursor: default;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.control-panel:hover {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.control-panel h3 {
+  margin: 0 0 15px 0;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #1a331e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-group {
+  margin-bottom: 12px;
+}
+
+.control-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #3f5943;
+}
+
+.control-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(56, 94, 56, 0.2);
+  outline: none;
+  transition: background 0.2s;
+}
+
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #385E38;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.1s;
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.control-checkbox {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  gap: 8px;
+  color: #3f5943;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.control-checkbox input {
+  cursor: pointer;
+  accent-color: #385E38;
+}
+
+.code-output {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.75rem;
+  color: #1e3020;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: text;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: 10px;
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #385E38;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.copy-btn:hover {
+  background: #2a472a;
+}
+
+.toggle-panel-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  color: #385E38;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10001;
+  display: none; /* Hidden by default when panel is open */
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.toggle-panel-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.close-panel-btn {
+  background: none;
+  border: none;
+  color: #3f5943;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  font-weight: bold;
+  transition: color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-panel-btn:hover {
+  color: #b23b3b;
+  transform: scale(1.15);
+}
