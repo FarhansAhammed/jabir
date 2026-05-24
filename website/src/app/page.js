@@ -12,6 +12,16 @@ export default function Home() {
   const containerRef = useRef(null);
   const textureRef = useRef(null);
 
+  // Background state and options
+  const [bgType, setBgType] = useState('black');
+  const bgGradients = {
+    black: 'linear-gradient(135deg, #121212 0%, #1c1c1c 100%)',
+    green: 'linear-gradient(135deg, #0d381e 0%, #03140a 100%)',
+    pink: 'linear-gradient(135deg, #421025 0%, #17030d 100%)',
+    red: 'linear-gradient(135deg, #400a0a 0%, #140202 100%)',
+    blue: 'linear-gradient(135deg, #0a1c40 0%, #020917 100%)'
+  };
+
   // Control panel states
   const [zoomY, setZoomY] = useState(1.35);
   const [zoomX, setZoomX] = useState(3.60);
@@ -27,6 +37,13 @@ export default function Home() {
   const offsetYRef = useRef(-0.075);
   const offsetXRef = useRef(-1.30);
   const lockAspectRef = useRef(true);
+
+  // Apply custom background gradient dynamically
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.style.background = bgGradients[bgType];
+    }
+  }, [bgType]);
 
   // Sync state changes with the refs and direct Three.js texture properties
   useEffect(() => {
@@ -197,13 +214,15 @@ export default function Home() {
       pills.push({ mesh, body, initialPosition: new THREE.Vector3(x, y, z) });
     }
 
-    // Generate grid
+    // Generate responsive grid
     function generateDenseGrid() {
       const xSpacing = 1.8;
       const ySpacing = 1.6;
 
-      const cols = 42;
-      const rows = 60;
+      // MOBILE DISPLAY OPTIMIZATION: Reduce grid size dynamically to prevent lag on mobile GPUs
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const cols = isMobile ? 18 : 42;
+      const rows = isMobile ? 28 : 60;
       const startX = -((cols - 1) * xSpacing) / 2;
       const startY = -((rows - 1) * ySpacing) / 2;
 
@@ -529,6 +548,36 @@ export default function Home() {
               ×
             </button>
           </h3>
+
+          {/* Dynamic Background Selector - requested color options: black (default), green, pink, red, blue */}
+          <div className="control-group">
+            <div className="control-label" style={{ fontWeight: 600, marginBottom: '8px' }}>
+              <span>Background Color</span>
+            </div>
+            <div className="bg-picker-container" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {Object.keys(bgGradients).map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setBgType(color)}
+                  title={`Set background to ${color}`}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    border: bgType === color ? '2px solid #ffffff' : '1px solid rgba(255, 255, 255, 0.2)',
+                    cursor: 'pointer',
+                    boxShadow: bgType === color ? '0 0 8px rgba(255, 255, 255, 0.6)' : 'none',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                    transform: bgType === color ? 'scale(1.15)' : 'scale(1)',
+                    background: color === 'black' ? '#121212' : 
+                                color === 'green' ? '#0d381e' : 
+                                color === 'pink' ? '#421025' : 
+                                color === 'red' ? '#400a0a' : '#0a1c40'
+                  }}
+                />
+              ))}
+            </div>
+          </div>
 
           <div className="control-checkbox">
             <input
